@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 interface TabItem {
@@ -11,6 +11,19 @@ interface TabItem {
 }
 
 const route = useRoute()
+
+const appMainRef = ref<HTMLElement | null>(null)
+
+watch(
+  () => route.path,
+  () => {
+    // 切换路由时自动回到顶部
+    if (appMainRef.value) {
+      // 如果需要平滑滚动可以用: appMainRef.value.scrollTo({ top: 0, behavior: 'smooth' })
+      appMainRef.value.scrollTop = 0
+    }
+  }
+)
 
 const tabs: TabItem[] = [
   {
@@ -60,37 +73,7 @@ const isActive = (path: string) => {
       <div class="ambient ambient-green"></div>
       <div class="ambient ambient-purple"></div>
 
-      <header class="app-header">
-        <div class="header-inner">
-          <div class="brand-block">
-            <div class="brand-icon">
-              <span>✚</span>
-            </div>
-
-            <div class="brand-copy">
-              <p class="eyebrow">Family Medicine Care</p>
-              <h1>家庭药品管理</h1>
-            </div>
-          </div>
-
-          <div class="header-status">
-            <span class="status-dot"></span>
-            <span>守护中</span>
-          </div>
-        </div>
-
-        <div class="page-hint">
-          <div>
-            <p class="page-name">{{ currentTab.name }}</p>
-            <p class="page-desc">{{ currentTab.desc }}</p>
-          </div>
-          <div class="page-icon">
-            {{ currentTab.activeIcon }}
-          </div>
-        </div>
-      </header>
-
-      <main class="app-main">
+      <main class="app-main" ref="appMainRef">
         <router-view />
       </main>
 
@@ -177,133 +160,92 @@ const isActive = (path: string) => {
   background: rgba(167, 139, 250, 0.12);
 }
 
-.app-header {
+.app-header.compact {
   position: sticky;
   top: 0;
   z-index: 40;
-  padding: calc(14px + env(safe-area-inset-top)) 18px 14px;
-  background: rgba(255, 255, 255, 0.72);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(22px);
-  -webkit-backdrop-filter: blur(22px);
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
+  background: rgba(255, 255, 255, 0.65);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .header-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 36px;
 }
 
-.brand-block {
+.title-block {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
-.brand-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 18px;
+.brand-emoji {
+  font-size: 20px;
+  line-height: 1;
   display: grid;
   place-items: center;
-  color: white;
-  font-size: 20px;
-  font-weight: 800;
-  background: linear-gradient(135deg, #3b82f6 0%, #10b981 100%);
-  box-shadow: 0 12px 26px rgba(59, 130, 246, 0.24);
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
-.brand-copy {
-  min-width: 0;
-}
-
-.eyebrow {
-  margin: 0 0 2px;
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: #60a5fa;
-}
-
-.brand-copy h1 {
+.page-title {
   margin: 0;
   font-size: 18px;
-  line-height: 1.25;
   font-weight: 800;
-  letter-spacing: -0.03em;
   color: #111827;
+  letter-spacing: -0.02em;
 }
 
-.header-status {
-  height: 32px;
-  padding: 0 11px;
+.header-status-mini {
+  height: 28px;
+  padding: 0 10px;
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: #047857;
-  background: rgba(236, 253, 245, 0.9);
-  border: 1px solid rgba(167, 243, 208, 0.9);
+  background: rgba(236, 253, 245, 0.8);
+  border: 1px solid rgba(167, 243, 208, 0.6);
 }
 
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 999px;
   background: #22c55e;
-  box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.14);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
 }
 
-.page-hint {
-  margin-top: 14px;
-  padding: 14px 14px 14px 16px;
-  border-radius: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.86), rgba(255, 255, 255, 0.58)),
-    linear-gradient(135deg, rgba(219, 234, 254, 0.55), rgba(209, 250, 229, 0.45));
-  border: 1px solid rgba(255, 255, 255, 0.76);
-  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.07);
+/* 标题切换动画 */
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.page-name {
-  margin: 0;
-  font-size: 15px;
-  line-height: 1.25;
-  font-weight: 800;
-  color: #111827;
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(10px);
 }
 
-.page-desc {
-  margin: 4px 0 0;
-  font-size: 12px;
-  line-height: 1.35;
-  font-weight: 600;
-  color: #6b7280;
-}
-
-.page-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 18px;
-  display: grid;
-  place-items: center;
-  font-size: 20px;
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-10px);
 }
 
 .app-main {
   position: relative;
   z-index: 1;
-  height: calc(100vh - 154px);
+  height: calc(100vh - 60px); /* 调整主区域高度，减少头部占比 */
   overflow-y: auto;
   padding-bottom: calc(96px + env(safe-area-inset-bottom));
   scroll-behavior: smooth;
