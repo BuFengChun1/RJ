@@ -152,29 +152,6 @@ const getTagClass = (item: Reminder) => {
       </svg>
     </button>
 
-    <!-- 底部导航栏 (Material You 药丸选中态) -->
-    <nav class="fixed bottom-0 left-0 right-0 z-30 bg-white border-t border-slate-100 flex justify-around items-center pb-safe pt-2 h-[88px] shadow-[0_-4px_20px_rgb(0,0,0,0.02)]">
-      <div 
-        v-for="tab in tabs" 
-        :key="tab.path"
-        class="flex flex-col items-center justify-center w-16 h-full cursor-pointer relative group"
-      >
-        <!-- 药丸状高亮背景 -->
-        <div class="absolute top-1 w-14 h-8 rounded-full transition-colors duration-300 -z-10"
-             :class="currentPath === tab.path ? 'bg-emerald-100' : 'bg-transparent group-hover:bg-slate-50'"></div>
-        
-        <svg class="w-6 h-6 mb-1.5 transition-colors duration-300 mt-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" 
-             :stroke-width="currentPath === tab.path ? '2.5' : '2'"
-             :class="currentPath === tab.path ? 'text-emerald-800' : 'text-slate-400'">
-          <path :d="tab.iconPath" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <span class="text-[11px] font-bold transition-colors duration-300"
-              :class="currentPath === tab.path ? 'text-emerald-800' : 'text-slate-400'">
-          {{ tab.name }}
-        </span>
-      </div>
-    </nav>
-
     <!-- 半屏弹窗 (Bottom Sheet) 遮罩 -->
     <Transition name="fade">
       <div v-if="showAddSheet" @click="closeAddSheet" class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] z-[100]"></div>
