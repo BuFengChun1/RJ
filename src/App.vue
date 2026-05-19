@@ -40,6 +40,13 @@ const tabs: TabItem[] = [
     desc: '家庭健康概览',
   },
   {
+    path: '/members',
+    name: '成员',
+    icon: '○',
+    activeIcon: '👨‍👩‍👧',
+    desc: '管理家庭成员',
+  },
+  {
     path: '/medicine',
     name: '药品',
     icon: '◌',
@@ -288,7 +295,7 @@ const isActive = (path: string) => {
   transform: translateX(-50%);
   padding: 8px;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 6px;
   border-radius: 30px;
   background: rgba(255, 255, 255, 0.78);
