@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 页面名称：附近药店 (Pharmacy Finder)
+ * 相对地址：src/views/Pharmacy.vue
+ * 功能概括：辅助功能页面。根据当前地理位置（模拟）展示周边药店信息，支持名称/地址搜索、营业时间查看及一键拨号咨询。
+ */
 import { ref, computed } from 'vue'
 
 // ==========================================

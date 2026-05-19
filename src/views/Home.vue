@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 页面名称：首页 (Dashboard)
+ * 相对地址：src/views/Home.vue
+ * 功能概括：展示系统全局状态看板，包括欢迎语、临期药品紧急提醒、今日服药任务进度及核心功能快捷入口。
+ */
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 

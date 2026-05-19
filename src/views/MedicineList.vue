@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 页面名称：药品管理 (Medicine Management)
+ * 相对地址：src/views/MedicineList.vue
+ * 功能概括：家庭药箱管理核心页面。提供药品录入、清单展示、过期状态自动计算（倒计时/过期提醒）及药品删除功能。
+ */
 import { ref, computed } from 'vue'
 
 // ==========================================

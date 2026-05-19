@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * 页面名称：用药提醒 (Pill Reminder)
+ * 相对地址：src/views/Reminder.vue
+ * 功能概括：设置和管理服药时间。支持添加提醒任务、开关提醒开关以及服药记录打卡，确保家人按时用药。
+ */
 import { ref, computed } from 'vue'
 
 // ==========================================
