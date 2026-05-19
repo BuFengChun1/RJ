@@ -4,7 +4,7 @@
  * 相对地址：src/views/Reminder.vue
  * 功能概括：设置和管理服药时间。支持添加提醒任务、开关提醒开关以及服药记录打卡，确保家人按时用药。
  */
-import { ref, computed } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 
 interface Reminder {
   id: number
@@ -34,6 +34,13 @@ const initFormState = (): DraftReminder => ({
 })
 
 const showForm = ref<boolean>(false)
+
+// 注入 App.vue 提供的全局方法，表单出现时隐藏 tabbar 避免遮挡输入法
+const setTabbarHidden = inject<(hidden: boolean) => void>('setTabbarHidden')
+watch(showForm, (val) => {
+  if (setTabbarHidden) setTabbarHidden(val)
+})
+
 const form = ref<DraftReminder>(initFormState())
 
 const reminders = ref<Reminder[]>([

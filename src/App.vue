@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, provide } from 'vue'
 import { useRoute } from 'vue-router'
 
 interface TabItem {
@@ -24,6 +24,12 @@ watch(
     }
   }
 )
+
+// 全局控制底部导航的显示与隐藏，供弹出层/表单使用
+const isTabbarHidden = ref(false)
+provide('setTabbarHidden', (hidden: boolean) => {
+  isTabbarHidden.value = hidden
+})
 
 const tabs: TabItem[] = [
   {
@@ -77,20 +83,22 @@ const isActive = (path: string) => {
         <router-view />
       </main>
 
-      <nav class="tabbar" aria-label="底部导航">
-        <router-link
-          v-for="tab in tabs"
-          :key="tab.path"
-          :to="tab.path"
-          class="tab-item"
-          :class="{ active: isActive(tab.path) }"
-        >
-          <span class="tab-icon">
-            {{ isActive(tab.path) ? tab.activeIcon : tab.icon }}
-          </span>
-          <span class="tab-label">{{ tab.name }}</span>
-        </router-link>
-      </nav>
+      <transition name="slide-up-tabbar">
+        <nav v-show="!isTabbarHidden" class="tabbar" aria-label="底部导航">
+          <router-link
+            v-for="tab in tabs"
+            :key="tab.path"
+            :to="tab.path"
+            class="tab-item"
+            :class="{ active: isActive(tab.path) }"
+          >
+            <span class="tab-icon">
+              {{ isActive(tab.path) ? tab.activeIcon : tab.icon }}
+            </span>
+            <span class="tab-label">{{ tab.name }}</span>
+          </router-link>
+        </nav>
+      </transition>
     </div>
   </div>
 </template>
@@ -224,6 +232,19 @@ const isActive = (path: string) => {
   border-radius: 999px;
   background: #22c55e;
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+}
+
+/* 导航切换动画 */
+.slide-up-tabbar-enter-active,
+.slide-up-tabbar-leave-active {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.35s ease;
+}
+
+.slide-up-tabbar-enter-from,
+.slide-up-tabbar-leave-to {
+  opacity: 0;
+  /* 因为自身有 transform: translateX(-50%)，这里做动画偏移兼容 */
+  transform: translate(-50%, 120%);
 }
 
 /* 标题切换动画 */

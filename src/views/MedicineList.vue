@@ -4,7 +4,7 @@
  * 相对地址：src/views/MedicineList.vue
  * 功能概括：家庭药箱管理核心页面。提供药品录入、清单展示、过期状态自动计算（倒计时/过期提醒）及药品删除功能。
  */
-import { ref, computed } from 'vue'
+import { ref, computed, watch, inject } from 'vue'
 
 interface Medicine {
   id: number
@@ -21,6 +21,13 @@ type ExpiryStatus = 'expired' | 'warning' | 'normal'
 
 const showForm = ref<boolean>(false)
 const showConfirm = ref<boolean>(false)
+
+// 注入 App.vue 提供的全局方法，表单出现时隐藏 tabbar 避免遮挡输入法
+const setTabbarHidden = inject<(hidden: boolean) => void>('setTabbarHidden')
+watch(showForm, (val) => {
+  if (setTabbarHidden) setTabbarHidden(val)
+})
+
 const delTarget = ref<Medicine | null>(null)
 const activeFilter = ref<'all' | 'normal' | 'warning' | 'expired'>('all')
 
